@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimonYu 信義房屋 | 房地產專家</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #0a0a0a;
+      --color-bg-alt: #111111;
+      --color-bg-card: #1a1a1a;
+      --color-primary: #4ade80;
+      --color-primary-dark: #22c55e;
+      --color-text: #f5f5f5;
+      --color-text-muted: #a0a0a0;
+      --color-border: #2a2a2a;
+      --font-main: 'Noto Sans TC', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; font-family: inherit; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--color-border);
+      transition: background 0.3s;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 70px;
+    }
+    .logo {
+      font-size: 1.5rem; font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--color-primary); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--color-text-muted);
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a:hover { color: var(--color-primary); }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px; background: var(--color-primary);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: var(--color-primary); color: #000;
+      padding: 10px 24px; border-radius: 50px;
+      font-weight: 700; font-size: 0.85rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(74,222,128,0.3);
+    }
+    .mobile-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: 20px;
+      width: 90%; max-width: 520px;
+      max-height: 90vh; overflow-y: auto;
+      padding: 40px;
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.3s;
+      position: relative;
+    }
+    .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: var(--color-bg); border: 1px solid var(--color-border);
+      color: var(--color-text-muted); width: 36px; height: 36px;
+      border-radius: 50%; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s;
+    }
+    .modal-close:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .modal h2 { font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; }
+    .modal .subtitle { color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 28px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block; font-size: 0.85rem; font-weight: 600;
+      margin-bottom: 6px; color: var(--color-text);
+    }
+    .form-group label .required { color: var(--color-primary); }
+    .form-group input,
+    .form-group select {
+      width: 100%; background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 10px; padding: 14px 16px;
+      color: #fff; font-size: 0.95rem;
+      font-family: var(--font-main);
+      transition: border-color 0.3s;
+      -webkit-appearance: none;
+    }
+    .form-group input::placeholder { color: #555; }
+    .form-group input:focus,
+    .form-group select:focus { outline: none; border-color: var(--color-primary); }
+    .form-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+    .form-group select option { background: var(--color-bg-card); color: #fff; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-submit {
+      width: 100%; background: var(--color-primary); color: #000;
+      border: none; border-radius: 50px; padding: 16px;
+      font-weight: 700; font-size: 1rem; margin-top: 8px;
+      transition: all 0.3s;
+    }
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(74,222,128,0.4);
+    }
+    .form-note {
+      text-align: center; font-size: 0.8rem;
+      color: var(--color-text-muted); margin-top: 14px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    #lightfall {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a2a1a 50%, #0a0a0a 100%);
+      z-index: 2;
+    }
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="g" patternUnits="userSpaceOnUse" width="20" height="20"><circle cx="1" cy="1" r="0.5" fill="rgba(74,222,128,0.1)"/></pattern></defs><rect fill="url(%23g)" width="100" height="100"/></svg>');
+      opacity: 0.5;
+    }
+    .hero-content {
+      position: relative; z-index: 2; max-width: 1200px;
+      margin: 0 auto; padding: 0 20px; padding-top: 120px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3);
+      padding: 8px 16px; border-radius: 50px;
+      font-size: 0.8rem; color: var(--color-primary);
+      margin-bottom: 24px;
+      animation: fadeInUp 0.8s ease;
+    }
+    .hero-badge::before {
+      content: ''; width: 8px; height: 8px;
+      background: var(--color-primary); border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6rem); font-weight: 900;
+      line-height: 1.05; letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      animation: fadeInUp 0.8s ease 0.1s both;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--color-primary), #86efac);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.2rem; color: var(--color-text-muted);
+      max-width: 500px; margin-bottom: 40px;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+    .hero-buttons {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      animation: fadeInUp 0.8s ease 0.3s both;
+    }
+    .btn-primary {
+      background: var(--color-primary); color: #000;
+      padding: 16px 40px; border-radius: 50px;
+      font-weight: 700; font-size: 1rem;
+      transition: all 0.3s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(74,222,128,0.4);
+    }
+    .btn-outline {
+      background: transparent; color: var(--color-text);
+      padding: 16px 40px; border-radius: 50px;
+      font-weight: 700; font-size: 1rem;
+      border: 2px solid var(--color-border);
+      transition: all 0.3s;
+    }
+    .btn-outline:hover {
+      border-color: var(--color-primary); color: var(--color-primary);
+    }
+    .hero-stats {
+      display: flex; gap: 48px; margin-top: 80px;
+      animation: fadeInUp 0.8s ease 0.4s both;
+    }
+    .stat h3 { font-size: 2.5rem; font-weight: 900; color: var(--color-primary); }
+    .stat p { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px; }
+
+    /* SCROLLING TICKER */
+    .ticker {
+      background: var(--color-primary); color: #000;
+      padding: 14px 0; overflow: hidden;
+      font-weight: 700; font-size: 0.9rem;
+      letter-spacing: 0.05em;
+    }
+    .ticker-track {
+      display: flex; gap: 60px;
+      animation: scroll 20s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-track span { flex-shrink: 0; }
+
+    /* SECTIONS */
+    section { padding: 100px 0; }
+    .section-header { text-align: center; margin-bottom: 60px; }
+    .section-tag {
+      display: inline-block;
+      color: var(--color-primary); font-size: 0.8rem;
+      font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .section-desc {
+      color: var(--color-text-muted); max-width: 600px;
+      margin: 16px auto 0; font-size: 1.05rem;
+    }
+
+    /* PROPERTY GRID */
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    .property-card {
+      background: var(--color-bg-card);
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--color-border);
+      transition: transform 0.4s, box-shadow 0.4s;
+      opacity: 0; transform: translateY(30px);
+    }
+    .property-card.visible {
+      opacity: 1; transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .property-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(74,222,128,0.1);
+    }
+    .property-img {
+      height: 240px; background: var(--color-bg-alt);
+      position: relative; overflow: hidden;
+    }
+    .property-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .property-card:hover .property-img img { transform: scale(1.08); }
+    .property-tag {
+      position: absolute; top: 16px; left: 16px;
+      background: var(--color-primary); color: #000;
+      padding: 6px 14px; border-radius: 50px;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .property-price {
+      position: absolute; bottom: 16px; right: 16px;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+      padding: 8px 16px; border-radius: 8px;
+      font-weight: 700; font-size: 1.1rem;
+    }
+    .property-info { padding: 24px; }
+    .property-info h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .property-meta {
+      display: flex; gap: 16px; color: var(--color-text-muted);
+      font-size: 0.85rem;
+    }
+    .property-meta span { display: flex; align-items: center; gap: 4px; }
+    .property-cta {
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid var(--color-border);
+      color: var(--color-primary); font-size: 0.85rem; font-weight: 600;
+    }
+    a.property-card { color: inherit; }
+    .data-source {
+      text-align: center; margin-top: 32px;
+      font-size: 0.85rem; color: var(--color-text-muted);
+    }
+    .data-source a { color: var(--color-primary); }
+
+    /* SERVICES */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .service-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: 20px;
+      padding: 40px 32px;
+      text-align: center;
+      transition: all 0.4s;
+      text-decoration: none; color: inherit;
+      display: block;
+      position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(74,222,128,0.08), transparent);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--color-primary);
+      box-shadow: 0 20px 60px rgba(74,222,128,0.12);
+    }
+    .service-icon {
+      width: 80px; height: 80px;
+      margin: 0 auto 24px;
+      background: rgba(74,222,128,0.1);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+      position: relative; z-index: 1;
+    }
+    .service-card h3 {
+      font-size: 1.2rem; font-weight: 700;
+      margin-bottom: 10px; position: relative; z-index: 1;
+    }
+    .service-card p {
+      color: var(--color-text-muted); font-size: 0.9rem;
+      line-height: 1.6; position: relative; z-index: 1;
+    }
+    .service-arrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 20px; color: var(--color-primary);
+      font-weight: 600; font-size: 0.9rem;
+      position: relative; z-index: 1;
+      transition: gap 0.3s;
+    }
+    .service-card:hover .service-arrow { gap: 10px; }
+
+    /* REGULATIONS */
+    .reg-list { display: flex; flex-direction: column; gap: 16px; }
+    .reg-item {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: 16px; padding: 28px 32px;
+      display: flex; align-items: center; gap: 24px;
+      transition: all 0.3s;
+      opacity: 0; transform: translateY(20px);
+    }
+    .reg-item.visible {
+      opacity: 1; transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reg-item:hover {
+      border-color: var(--color-primary);
+      background: rgba(74,222,128,0.03);
+    }
+    .reg-date {
+      background: rgba(74,222,128,0.1);
+      border: 1px solid rgba(74,222,128,0.2);
+      padding: 12px 16px; border-radius: 12px;
+      text-align: center; flex-shrink: 0; min-width: 90px;
+    }
+    .reg-date .day { font-size: 1.5rem; font-weight: 900; color: var(--color-primary); }
+    .reg-date .month { font-size: 0.7rem; color: var(--color-text-muted); text-transform: uppercase; }
+    .reg-content h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+    .reg-content p { font-size: 0.9rem; color: var(--color-text-muted); }
+    .reg-arrow { margin-left: auto; color: var(--color-primary); font-size: 1.5rem; transition: transform 0.3s; }
+    .reg-item:hover .reg-arrow { transform: translateX(6px); }
+
+    /* REVIEWS */
+    .reviews-section { background: var(--color-bg-alt); }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .review-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: 16px; padding: 32px;
+      position: relative;
+      opacity: 0; transform: translateY(20px);
+    }
+    .review-card.visible {
+      opacity: 1; transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .review-stars { color: #fbbf24; font-size: 1rem; margin-bottom: 16px; letter-spacing: 2px; }
+    .review-card blockquote {
+      font-size: 1rem; line-height: 1.7;
+      color: var(--color-text-muted); margin-bottom: 20px;
+      font-style: italic;
+    }
+    .review-author {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .review-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), #86efac);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; color: #000; font-size: 1rem;
+    }
+    .review-author-info .name { font-weight: 700; font-size: 0.95rem; }
+    .review-author-info .role { font-size: 0.8rem; color: var(--color-text-muted); }
+    .review-quote {
+      position: absolute; top: 20px; right: 24px;
+      font-size: 4rem; color: rgba(74,222,128,0.1);
+      font-family: Georgia, serif; line-height: 1;
+    }
+
+    /* NEWSLETTER */
+    .newsletter {
+      background: linear-gradient(135deg, rgba(74,222,128,0.08), rgba(74,222,128,0.02));
+      border: 1px solid rgba(74,222,128,0.15);
+      border-radius: 24px; padding: 60px; text-align: center;
+      margin: 0 20px;
+    }
+    .newsletter h2 { font-size: 2rem; font-weight: 900; margin-bottom: 12px; }
+    .newsletter p { color: var(--color-text-muted); margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .newsletter-form {
+      display: flex; gap: 12px; max-width: 480px;
+      margin: 0 auto;
+    }
+    .newsletter-form input {
+      flex: 1; background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 50px; padding: 16px 24px;
+      color: #fff; font-size: 1rem;
+      font-family: var(--font-main);
+    }
+    .newsletter-form input::placeholder { color: var(--color-text-muted); }
+    .newsletter-form input:focus { outline: none; border-color: var(--color-primary); }
+    .newsletter-form button {
+      background: var(--color-primary); color: #000;
+      border: none; border-radius: 50px;
+      padding: 16px 32px; font-weight: 700;
+      font-size: 1rem; white-space: nowrap;
+      transition: all 0.3s;
+    }
+    .newsletter-form button:hover {
+      box-shadow: 0 8px 30px rgba(74,222,128,0.4);
+      transform: translateY(-2px);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--color-bg-alt);
+      border-top: 1px solid var(--color-border);
+      padding: 60px 0 30px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 40px;
+    }
+    .footer-brand .logo { font-size: 1.8rem; margin-bottom: 12px; display: inline-block; }
+    .footer-brand p { color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.7; }
+    .footer-col h4 {
+      font-size: 0.85rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 16px; color: var(--color-primary);
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a {
+      color: var(--color-text-muted); font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+    .footer-col a:hover { color: var(--color-primary); }
+    .footer-bottom {
+      border-top: 1px solid var(--color-border);
+      padding-top: 24px;
+      display: flex; justify-content: space-between;
+      align-items: center; font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+    .social-links { display: flex; gap: 16px; }
+    .social-links a {
+      width: 40px; height: 40px;
+      border: 1px solid var(--color-border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s; font-size: 0.85rem;
+    }
+    .social-links a:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateY(-3px);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .mobile-toggle { display: block; }
+      .hero-stats { gap: 24px; flex-wrap: wrap; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .newsletter { padding: 40px 24px; }
+      .newsletter-form { flex-direction: column; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+      .property-grid { grid-template-columns: 1fr; }
+      .modal { width: 95%; padding: 28px 24px; max-height: 85vh; }
+      .modal h2 { font-size: 1.3rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.5rem; }
+      .hero p { font-size: 1rem; }
+      .hero-buttons { flex-direction: column; }
+      .hero-buttons a { text-align: center; }
+      .hero-stats { margin-top: 48px; }
+      .stat h3 { font-size: 2rem; }
+      .section-title { font-size: 1.8rem; }
+      .property-meta { flex-wrap: wrap; gap: 8px; }
+      .reg-item { flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px; }
+      .reg-date { min-width: auto; }
+      .reg-arrow { margin-left: 0; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .mobile-cta { display: flex !important; }
+      body { padding-bottom: 70px; }
+    }
+
+    /* MOBILE FIXED CTA */
+    .mobile-cta {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      z-index: 999;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--color-border);
+      padding: 12px 20px;
+      justify-content: center;
+    }
+    .mobile-cta a {
+      display: block; width: 100%;
+      background: var(--color-primary); color: #000;
+      padding: 14px; border-radius: 50px;
+      font-weight: 700; font-size: 1rem; text-align: center;
+    }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo">Simon<span>Yu</span></a>
+      <ul class="nav-links">
+        <li><a href="#properties">物件探索</a></li>
+        <li><a href="#services">實用工具</a></li>
+        <li><a href="#regulations">法規整理</a></li>
+        <li><a href="#reviews">客戶評價</a></li>
+        <li><a href="#contact">聯絡我</a></li>
+      </ul>
+      <a href="#" class="nav-cta" onclick="event.preventDefault(); document.getElementById('consultModal').classList.add('active');">預約諮詢</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="lightfall"></canvas>
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">信義房屋 • 房地產專家</div>
+      <h1>找到你的<br><span class="highlight">理想家</span></h1>
+      <p>專注台北房地產市場，提供最新物件資訊與法規整理，讓您安心做出每一個決定。</p>
+      <div class="hero-buttons">
+        <a href="#properties" class="btn-primary">瀏覽物件</a>
+        <a href="#regulations" class="btn-outline">法規懶人包</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><h3 id="stat-years">0</h3><p>年房產經驗</p></div>
+        <div class="stat"><h3 id="stat-deals">0</h3><p>筆成交紀錄</p></div>
+        <div class="stat"><h3 id="stat-clients">0</h3><p>位滿意客戶</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-track">
+      <span>🏠 信義房屋 值得信賴的房產夥伴</span>
+      <span>📋 最新房貸利率 2.18% 起</span>
+      <span>🔑 2026 實價登錄最新資訊</span>
+      <span>📊 大安區均價突破 120 万/坪</span>
+      <span>✅ 首購族優惠方案專案諮詢</span>
+      <span>🏠 信義房屋 值得信賴的房產夥伴</span>
+      <span>📋 最新房貸利率 2.18% 起</span>
+      <span>🔑 2026 實價登錄最新資訊</span>
+      <span>📊 大安區均價突破 120 万/坪</span>
+      <span>✅ 首購族優惠方案專案諮詢</span>
+    </div>
+  </div>
+
+  <!-- PROPERTIES -->
+  <section id="properties">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">精選物件</div>
+        <h2 class="section-title">本週熱門推薦</h2>
+        <p class="section-desc">嚴選優質物件，為您把關每一個細節</p>
+      </div>
+      <div class="property-grid">
+        <a href="https://www.sinyi.com.tw/buy/list/Taipei-city/116-zip" target="_blank" rel="noopener" class="property-card">
+          <div class="property-img">
+            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=400&fit=crop" alt="大安區物件">
+            <div class="property-tag">獨家</div>
+            <div class="property-price">4,580 萬</div>
+          </div>
+          <div class="property-info">
+            <h3>大安區 · 新成屋三房</h3>
+            <div class="property-meta">
+              <span>📐 32.5 坪</span>
+              <span>🛏️ 3房2廳</span>
+              <span>🚇 近捷運</span>
+            </div>
+            <div class="property-cta">查看信義房屋更多物件 →</div>
+          </div>
+        </a>
+        <a href="https://www.sinyi.com.tw/buy/list/Taipei-city/115-zip" target="_blank" rel="noopener" class="property-card">
+          <div class="property-img">
+            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=400&fit=crop" alt="信義區物件">
+            <div class="property-tag">新上架</div>
+            <div class="property-price">6,200 萬</div>
+          </div>
+          <div class="property-info">
+            <h3>信義區 · 豪華四房</h3>
+            <div class="property-meta">
+              <span>📐 48.2 坪</span>
+              <span>🛏️ 4房2廳</span>
+              <span>🅿️ 雙車位</span>
+            </div>
+            <div class="property-cta">查看信義房屋更多物件 →</div>
+          </div>
+        </a>
+        <a href="https://www.sinyi.com.tw/buy/list/Taipei-city/104-zip" target="_blank" rel="noopener" class="property-card">
+          <div class="property-img">
+            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop" alt="中山區物件">
+            <div class="property-tag">高CP值</div>
+            <div class="property-price">2,850 萬</div>
+          </div>
+          <div class="property-info">
+            <h3>中山區 · 首購首選</h3>
+            <div class="property-meta">
+              <span>📐 18.7 坪</span>
+              <span>🛏️ 2房1廳</span>
+              <span>🚇 捷運共構</span>
+            </div>
+            <div class="property-cta">查看信義房屋更多物件 →</div>
+          </div>
+        </a>
+        <a href="https://www.sinyi.com.tw/buy/list/Taipei-city/105-zip" target="_blank" rel="noopener" class="property-card">
+          <div class="property-img">
+            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop" alt="松山區物件">
+            <div class="property-tag">稀有釋出</div>
+            <div class="property-price">8,900 萬</div>
+          </div>
+          <div class="property-info">
+            <h3>松山區 · 頂級大平層</h3>
+            <div class="property-meta">
+              <span>📐 62.8 坪</span>
+              <span>🛏️ 4房3廳</span>
+              <span>🏙️ 270度景觀</span>
+            </div>
+            <div class="property-cta">查看信義房屋更多物件 →</div>
+          </div>
+        </a>
+        <a href="https://www.sinyi.com.tw/buy/list/Taipei-city/112-zip" target="_blank" rel="noopener" class="property-card">
+          <div class="property-img">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop" alt="北投區物件">
+            <div class="property-tag">投資型</div>
+            <div class="property-price">3,150 萬</div>
+          </div>
+          <div class="property-info">
+            <h3>北投區 · 收租套房</h3>
+            <div class="property-meta">
+              <span>📐 15.3 坪</span>
+              <span>🛏️ 1房1廳</span>
+              <span>📈 投報率 3.2%</span>
+            </div>
+            <div class="property-cta">查看信義房屋更多物件 →</div>
+          </div>
+        </a>
+        <a href="https://www.sinyi.com.tw/buy/list/Taipei-city/114-zip" target="_blank" rel="noopener" class="property-card">
+          <div class="property-img">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop" alt="內湖區物件">
+            <div class="property-tag">即刻入住</div>
+            <div class="property-price">5,380 萬</div>
+          </div>
+          <div class="property-info">
+            <h3>內湖區 · 科技園區旁</h3>
+            <div class="property-meta">
+              <span>📐 38.6 坪</span>
+              <span>🛏️ 3房2廳</span>
+              <span>🌳 社區公園</span>
+            </div>
+            <div class="property-cta">查看信義房屋更多物件 →</div>
+          </div>
+        </a>
+      </div>
+      <p class="data-source">物件資料來源：<a href="https://www.sinyi.com.tw/" target="_blank" rel="noopener">信義房屋</a>，點擊可查看該區域更多物件</p>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">實用工具</div>
+        <h2 class="section-title">購屋好幫手</h2>
+        <p class="section-desc">善用信義房屋工具，讓您購屋更順利</p>
+      </div>
+      <div class="services-grid">
+        <a href="https://www.sinyi.com.tw/buy/area/map" target="_blank" rel="noopener" class="service-card">
+          <div class="service-icon">🗺️</div>
+          <h3>區域找屋</h3>
+          <p>依行政區、生活圈、捷運站搜尋物件，快速篩選理想地段</p>
+          <span class="service-arrow">前往查詢 →</span>
+        </a>
+        <a href="https://www.sinyi.com.tw/tradeinfo/list" target="_blank" rel="noopener" class="service-card">
+          <div class="service-icon">📊</div>
+          <h3>實價登錄查詢</h3>
+          <p>查詢全台各區成交行情，掌握最新市場真實價格</p>
+          <span class="service-arrow">前往查詢 →</span>
+        </a>
+        <a href="https://www.sinyi.com.tw/buy/loan/calculator" target="_blank" rel="noopener" class="service-card">
+          <div class="service-icon">🧮</div>
+          <h3>房貸試算</h3>
+          <p>輸入貸款金額與利率，快速試算月付金與總利息</p>
+          <span class="service-arrow">前往試算 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGULATIONS -->
+  <section id="regulations">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">法規整理</div>
+        <h2 class="section-title">最新房產法規懶人包</h2>
+        <p class="section-desc">掌握最新政策變動，保障您的權益</p>
+      </div>
+      <div class="reg-list">
+        <a href="#" class="reg-item">
+          <div class="reg-date"><div class="day">15</div><div class="month">6月</div></div>
+          <div class="reg-content">
+            <h3>2026 房貸新制：央行第七波信用管制細則</h3>
+            <p>針對特定地區第二戶以上購屋貸款，最高成數降至五成，詳解影響範圍與應對策略。</p>
+          </div>
+          <div class="reg-arrow">→</div>
+        </a>
+        <a href="#" class="reg-item">
+          <div class="reg-date"><div class="day">08</div><div class="month">6月</div></div>
+          <div class="reg-content">
+            <h3>實價登錄 2.0 更新：預售屋全面納管</h3>
+            <p>2026年起預售屋成交資訊須於30日內申報，違規者最高罰鍰100萬元。</p>
+          </div>
+          <div class="reg-arrow">→</div>
+        </a>
+        <a href="#" class="reg-item">
+          <div class="reg-date"><div class="day">28</div><div class="month">5月</div></div>
+          <div class="reg-content">
+            <h3>囤房稅 2.0 上路：多屋族稅負加重</h3>
+            <p>全國歸戶、差別稅率正式實施，持有4戶以上稅率最高升至4.8%。</p>
+          </div>
+          <div class="reg-arrow">→</div>
+        </a>
+        <a href="#" class="reg-item">
+          <div class="reg-date"><div class="day">20</div><div class="month">5月</div></div>
+          <div class="reg-content">
+            <h3>都更條例修正草案：老屋重建新契機</h3>
+            <p>放寬都更同意門檻至80%，新增「危老重建」加速審議機制。</p>
+          </div>
+          <div class="reg-arrow">→</div>
+        </a>
+        <a href="#" class="reg-item">
+          <div class="reg-date"><div class="day">12</div><div class="month">5月</div></div>
+          <div class="reg-content">
+            <h3>租賃專法修法：房東申報義務加重</h3>
+            <p>房東須於租賃契約簽訂30日內申報租屋資訊，未申報者處以罰鍰。</p>
+          </div>
+          <div class="reg-arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="reviews" class="reviews-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">客戶評價</div>
+        <h2 class="section-title">他們都找到了理想家</h2>
+        <p class="section-desc">超過 500 位客戶的信賴與推薦</p>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <div class="review-stars">★★★★★</div>
+          <blockquote>Simon 非常專業，從看屋到成交只花了三週時間。他對大安區的市場瞭如指掌，幫我們找到了心目中的完美物件！</blockquote>
+          <div class="review-author">
+            <div class="review-avatar">陳</div>
+            <div class="review-author-info">
+              <div class="name">陳先生 & 陳太太</div>
+              <div class="role">首購族 · 大安區成交</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <div class="review-stars">★★★★★</div>
+          <blockquote>第一次買房子很緊張，Simon 每次都會耐心解釋合約內容，法規問題也都回答得很清楚。感受到他的誠意，推薦給所有正在找房的朋友。</blockquote>
+          <div class="review-author">
+            <div class="review-avatar">林</div>
+            <div class="review-author-info">
+              <div class="name">林小姐</div>
+              <div class="role">首次購屋 · 中山區成交</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <div class="review-stars">★★★★★</div>
+          <blockquote>投資物件的報酬率分析很到位，Simon 不會只推高單價的物件，而是真的會從你的需求出發去建議。已經推薦給三個朋友了。</blockquote>
+          <div class="review-author">
+            <div class="review-avatar">張</div>
+            <div class="review-author-info">
+              <div class="name">張先生</div>
+              <div class="role">投資客 · 內湖區成交</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section id="contact">
+    <div class="container">
+      <div class="newsletter">
+        <h2>掌握最新房產資訊</h2>
+        <p>訂閱我的週報，獲取獨家物件推薦、市場分析與法規更新通知</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='已訂閱 ✓'; this.querySelector('input').value='';">
+          <input type="email" placeholder="請輸入您的電子郵件" required>
+          <button type="submit">免費訂閱</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONSULTATION MODAL -->
+  <div class="modal-overlay" id="consultModal">
+    <div class="modal">
+      <button class="modal-close" onclick="document.getElementById('consultModal').classList.remove('active')">✕</button>
+      <h2>預約諮詢</h2>
+      <p class="subtitle">填寫以下資訊，我會盡快與您聯繫</p>
+      <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='已送出 ✓'; setTimeout(() => { document.getElementById('consultModal').classList.remove('active'); this.querySelector('button').textContent='送出預約'; this.reset(); }, 2000);">
+        <div class="form-group">
+          <label>姓名 <span class="required">*</span></label>
+          <input type="text" placeholder="請輸入您的姓名" required>
+        </div>
+        <div class="form-group">
+          <label>電話 <span class="required">*</span></label>
+          <input type="tel" placeholder="請輸入聯絡電話" required>
+        </div>
+        <div class="form-group">
+          <label>想了解的產品 <span class="required">*</span></label>
+          <select required>
+            <option value="" disabled selected>請選擇產品類型</option>
+            <option>買屋</option>
+            <option>賣屋</option>
+            <option>租屋</option>
+            <option>投資</option>
+            <option>都更危老</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>區域</label>
+          <select>
+            <option value="" disabled selected>請選擇區域</option>
+            <option>大安區</option>
+            <option>信義區</option>
+            <option>中山區</option>
+            <option>松山區</option>
+            <option>中正區</option>
+            <option>大同區</option>
+            <option>萬華區</option>
+            <option>內湖區</option>
+            <option>南港區</option>
+            <option>北投區</option>
+            <option>士林區</option>
+            <option>文山區</option>
+            <option>新北市</option>
+            <option>其他</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>總價區間</label>
+            <select>
+              <option value="" disabled selected>請選擇</option>
+              <option>1,000 萬以下</option>
+              <option>1,000 ~ 2,000 萬</option>
+              <option>2,000 ~ 3,000 萬</option>
+              <option>3,000 ~ 4,000 萬</option>
+              <option>4,000 萬以上</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>房數</label>
+            <select>
+              <option value="" disabled selected>請選擇</option>
+              <option>套房</option>
+              <option>1 房</option>
+              <option>2 房</option>
+              <option>3 房</option>
+              <option>4 房</option>
+              <option>5 房以上</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="form-submit">送出預約</button>
+        <p class="form-note">送出後將由專人於 24 小時內與您聯繫</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- MOBILE FIXED CTA -->
+  <div class="mobile-cta">
+    <a href="#" onclick="event.preventDefault(); document.getElementById('consultModal').classList.add('active');">📞 預約諮詢</a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">Simon<span>Yu</span></a>
+          <p>信義房屋 房地產專家<br>專注台北房產市場，為您把關每一個細節。</p>
+        </div>
+        <div class="footer-col">
+          <h4>快速連結</h4>
+          <ul>
+            <li><a href="#properties">物件探索</a></li>
+            <li><a href="#services">實用工具</a></li>
+            <li><a href="#regulations">法規整理</a></li>
+            <li><a href="#reviews">客戶評價</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>服務地區</h4>
+          <ul>
+            <li><a href="#">大安區</a></li>
+            <li><a href="#">信義區</a></li>
+            <li><a href="#">中山區</a></li>
+            <li><a href="#">松山區</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>聯絡方式</h4>
+          <ul>
+            <li><a href="tel:+886912345678">0912-345-678</a></li>
+            <li><a href="mailto:simon@sinyi.com.tw">simon@sinyi.com.tw</a></li>
+            <li><a href="#">台北市大安區</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 SimonYu 信義房屋. All rights reserved.</p>
+        <div class="social-links">
+          <a href="#">FB</a>
+          <a href="#">IG</a>
+          <a href="#">LINE</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer for scroll animations
+    const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.property-card, .reg-item, .review-card').forEach(el => observer.observe(el));
+
+    // Animated counters
+    function animateCounter(id, target, suffix = '') {
+      const el = document.getElementById(id);
+      let current = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(timer); }
+        el.textContent = Math.floor(current) + suffix;
+      }, 25);
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter('stat-years', 12, '+');
+          animateCounter('stat-deals', 800, '+');
+          animateCounter('stat-clients', 500, '+');
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    statsObserver.observe(document.querySelector('.hero-stats'));
+
+    // Mobile nav toggle
+    const mobileStyle = document.createElement('style');
+    mobileStyle.textContent = `.nav-links.show{display:flex!important;position:absolute;top:70px;left:0;right:0;background:rgba(10,10,10,0.97);flex-direction:column;padding:24px;gap:20px;border-bottom:1px solid var(--color-border);z-index:1001;}`;
+    document.head.appendChild(mobileStyle);
+    document.querySelector('.mobile-toggle').addEventListener('click', function() {
+      document.querySelector('.nav-links').classList.toggle('show');
+    });
+
+    // Close modal on overlay click
+    document.getElementById('consultModal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('active');
+    });
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') document.getElementById('consultModal').classList.remove('active');
+    });
+
+    // Lightfall Effect
+    (function() {
+      const canvas = document.getElementById('lightfall');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let mouseX = 0, mouseY = 0;
+      const streaks = [];
+      const streakCount = 80;
+      const colors = [
+        'rgba(74, 222, 128,',   // green
+        'rgba(34, 197, 94,',    // dark green
+        'rgba(134, 239, 172,',  // light green
+        'rgba(255, 255, 255,',  // white
+        'rgba(187, 247, 208,',  // emerald
+        'rgba(74, 222, 128,',
+        'rgba(200, 255, 200,',
+      ];
+
+      function resize() {
+        width = canvas.width = canvas.offsetWidth;
+        height = canvas.height = canvas.offsetHeight;
+      }
+
+      function createStreak() {
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height - height,
+          speed: 1.5 + Math.random() * 3,
+          length: 40 + Math.random() * 100,
+          width: 0.5 + Math.random() * 1.5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          opacity: 0.1 + Math.random() * 0.4,
+          drift: (Math.random() - 0.5) * 0.5,
+        };
+      }
+
+      function init() {
+        resize();
+        streaks.length = 0;
+        for (let i = 0; i < streakCount; i++) {
+          const s = createStreak();
+          s.y = Math.random() * height;
+          streaks.push(s);
+        }
+      }
+
+      function drawTunnel() {
+        const cx = width / 2;
+        const cy = height / 2;
+        const maxR = Math.max(width, height) * 0.8;
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+        gradient.addColorStop(0, 'rgba(74, 222, 128, 0.06)');
+        gradient.addColorStop(0.3, 'rgba(34, 197, 94, 0.03)');
+        gradient.addColorStop(0.7, 'rgba(10, 10, 10, 0.01)');
+        gradient.addColorStop(1, 'rgba(10, 10, 10, 0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+
+        for (let i = 1; i <= 5; i++) {
+          ctx.beginPath();
+          ctx.arc(cx, cy, maxR * i * 0.15, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(74, 222, 128, ${0.04 - i * 0.006})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+
+      function drawCursorLight() {
+        const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 180);
+        gradient.addColorStop(0, 'rgba(74, 222, 128, 0.15)');
+        gradient.addColorStop(0.5, 'rgba(74, 222, 128, 0.05)');
+        gradient.addColorStop(1, 'rgba(74, 222, 128, 0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        drawTunnel();
+        drawCursorLight();
+
+        for (let i = 0; i < streaks.length; i++) {
+          const s = streaks[i];
+
+          const dx = mouseX - s.x;
+          const dy = mouseY - s.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const influence = Math.max(0, 1 - dist / 300);
+
+          s.x += s.drift + dx * influence * 0.002;
+          s.y += s.speed;
+
+          if (s.y > height + s.length) {
+            streaks[i] = createStreak();
+          }
+
+          const gradient = ctx.createLinearGradient(s.x, s.y, s.x, s.y - s.length);
+          gradient.addColorStop(0, s.color + (s.opacity + influence * 0.3) + ')');
+          gradient.addColorStop(1, s.color + '0)');
+
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(s.x, s.y - s.length);
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = s.width;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      canvas.addEventListener('mousemove', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+      });
+
+      canvas.addEventListener('touchmove', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.touches[0].clientX - rect.left;
+        mouseY = e.touches[0].clientY - rect.top;
+      }, { passive: true });
+
+      window.addEventListener('resize', resize);
+      init();
+      animate();
+    })();
+  </script>
+</body>
+</html>
